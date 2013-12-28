@@ -71,6 +71,19 @@ sealed trait LinkedList[+E] {
     }
   }
 
+  @tailrec final def find( p : (E) => Boolean  ) : Option[E] = {
+    this match {
+      case Node( head, tail ) => {
+        if ( p(head) ) {
+          Some(head)
+        } else {
+          tail.find(p)
+        }
+      }
+      case Empty => None
+    }
+  }
+
 }
 
 object LinkedList {

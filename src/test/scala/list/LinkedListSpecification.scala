@@ -55,15 +55,83 @@ class LinkedListSpecification extends Specification {
       val current = LinkedList(1, 2, 3, 4)
       val other = LinkedList(10, 11, 12, 13)
 
-      ( other ::: current ) === LinkedList(10, 11, 12, 13, 1, 2, 3, 4)
+      (other ::: current) === LinkedList(10, 11, 12, 13, 1, 2, 3, 4)
     }
 
     "foreach implementation" in {
       val items = new ListBuffer[Int]()
 
-      LinkedList(1, 2, 3, 4).foreach( (x) => items += x )
+      LinkedList(1, 2, 3, 4).foreach((x) => items += x)
 
       items === List(1, 2, 3, 4)
+    }
+
+    "find John" in {
+      val items = LinkedList("John", "Josh", "Mary")
+      items.find(name => name == "John") === Some("John")
+    }
+
+    "not find John" in {
+      val items = LinkedList("Josh", "Mary")
+      items.find(name => name == "John") === None
+    }
+
+    "find with pattern matching" in {
+      val items = LinkedList("Josh", "Mary")
+      items.find(name => name == "Mary") match {
+        case Some(item) => success
+        case None => failure("Should not have come here")
+      }
+    }
+
+    "find the numbers with for comprehension" in {
+      val numbers = LinkedList(1, 2, 3, 4, 5)
+
+      val result = for {one <- numbers.find(x => x == 1)
+                        two <- numbers.find(x => x == 2)
+                        moreThan4 <- numbers.find(x => x > 4)
+      } yield one + two + moreThan4
+
+      result.get() === 8
+    }
+
+    "find the numbers flatMapping" in {
+      val numbers = LinkedList(1, 2, 3, 4, 5)
+
+      val result = numbers.find(x => x == 1)
+        .flatMap(one =>
+        numbers.find(x => x == 2)
+          .flatMap(
+          two => numbers.find(x => x > 4).map(
+            moreThan4 =>
+              one + two + moreThan4)))
+
+      result.get() === 8
+    }
+
+    "find the numbers flatMapping" in {
+      val numbers = LinkedList(1, 2, 3, 4, 5)
+
+      val result: Option[Option[Option[Int]]] = numbers.find(x => x == 1)
+        .map(one =>
+        numbers.find(x => x == 2)
+          .map(
+          two => numbers.find(x => x > 4).map(
+            moreThan4 =>
+              one + two + moreThan4)))
+
+      result.get() === 8
+    }
+
+    "wont find anything" in {
+      val numbers = LinkedList(1, 2, 3, 4, 5)
+
+      val result = for {one <- numbers.find(x => x == 1)
+                        two <- numbers.find(x => x == 2)
+                        moreThan4 <- numbers.find(x => x > 5)
+      } yield one + two + moreThan4
+
+      result === None
     }
 
   }
