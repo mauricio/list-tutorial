@@ -27,6 +27,11 @@ class OptionSpecification extends Specification {
       result.isDefined must beFalse
     }
 
+    "be getOrElse the string" in {
+      val item = Some("10")
+      item.getOrElse("25") === "10"
+    }
+
   }
 
 }

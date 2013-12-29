@@ -10,7 +10,7 @@ sealed trait Option[+E] {
   def flatMap[R]( f : E => Option[R] ) : Option[R] = if ( isDefined ) f(this.get) else None
   def foreach[U]( f : E => U )
   def get() : E
-  def getOrElse[B >: E]( f : () => B ) : B = if ( isDefined ) get() else f()
+  def getOrElse[B >: E]( f : => B ) : B = if ( isDefined ) get() else f
 
 }
 
