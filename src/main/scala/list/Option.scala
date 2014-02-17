@@ -6,7 +6,7 @@ sealed trait Option[+E] {
   def isEmpty : Boolean = !isDefined
   def size : Int = if (isDefined) 1 else 0
 
-  def map[R](f : E => R) : Option[R]
+  def map[R](f : E => R) : Option[R] = flatMap(v => Some(f(v)))
   def flatMap[R]( f : E => Option[R] ) : Option[R] = if ( isDefined ) f(this.get) else None
   def foreach[U]( f : E => U )
   def get() : E

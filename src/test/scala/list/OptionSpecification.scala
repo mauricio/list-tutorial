@@ -32,6 +32,27 @@ class OptionSpecification extends Specification {
       item.getOrElse("25") === "10"
     }
 
+    "be left unit" in {
+      val multiplier : Int => Option[Int] = v => Some(v * v)
+      val item = Some(10).flatMap(multiplier)
+
+      item === multiplier(10)
+    }
+
+    "be right unit" in {
+      val value = Some(50).flatMap(v => Some(v))
+      value === Some(50)
+    }
+
+    "be associative" in {
+      val multiplier : Int => Option[Int] = v => Some(v * v)
+      val divider : Int => Option[Int] = v => Some(v/2)
+      val original = Some(10)
+
+      original.flatMap(multiplier).flatMap(divider) ===
+        original.flatMap(v => multiplier(v).flatMap(divider))
+    }
+
   }
 
 }
